@@ -154,6 +154,31 @@ func resourceGithubOrganizationRuleset() *schema.Resource {
 							},
 						},
 					},
+					"repository_property" : {
+						Type: schema.TypeList,
+						Optional: true,
+						Description : "",
+						Elem: &schema.Schema{
+							Schema: map[string]*schema.Schema{
+								"include": {
+									Type:     schema.TypeList,
+									Optional: true,
+									Description: "",
+									Elem: &schema.Schema{
+										Type: schema.TypeString,
+									},
+								},
+								"exclude": {
+									Type:     schema.TypeList,
+									Optional: true,
+									Description: "",
+									Elem: &schema.Schema{
+										Type: schema.TypeString,
+									},
+								}
+							}
+						}
+					},
 				},
 			},
 			"rules": {
@@ -473,14 +498,14 @@ func resourceGithubOrganizationRulesetCreate(d *schema.ResourceData, meta interf
 
 	owner := meta.(*Owner).name
 
-	rulesetReq := resourceGithubRulesetObject(d, owner)
+	rulesetReq := resourceGithubRulesetObject(d, owner) //<
 
 	ctx := context.Background()
 
 	var ruleset *github.Ruleset
 	var err error
 
-	ruleset, _, err = client.Organizations.CreateOrganizationRuleset(ctx, owner, rulesetReq)
+	ruleset, _, err = client.Organizations.CreateOrganizationRuleset(ctx, owner, rulesetReq) //<
 	if err != nil {
 		return err
 	}
