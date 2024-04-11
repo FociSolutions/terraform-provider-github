@@ -80,7 +80,7 @@ func resourceGithubOrganizationRuleset() *schema.Resource {
 				Computed:    true,
 				Description: "GitHub ID for the ruleset.",
 			},
-			"conditions": {
+			"conditions": { //<
 				Type:        schema.TypeList,
 				Optional:    true,
 				MaxItems:    1,
@@ -153,31 +153,31 @@ func resourceGithubOrganizationRuleset() *schema.Resource {
 								Type: schema.TypeInt,
 							},
 						},
-					},
-					"repository_property" : {
-						Type: schema.TypeList,
-						Optional: true,
-						Description : "",
-						Elem: &schema.Schema{
-							Schema: map[string]*schema.Schema{
-								"include": {
-									Type:     schema.TypeList,
-									Optional: true,
-									Description: "",
-									Elem: &schema.Schema{
-										Type: schema.TypeString,
+						"repository_property" : {
+							Type: schema.TypeList,
+							Optional: true,
+							Description : "Conditions to target repositories by property",
+							Elem: &schema.Schema{
+								Schema: map[string]*schema.Schema{
+									"include": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: "The repository properties and values to include. All of these properties must match for the condition to pass.", // The repository properties and values to include. All of these properties must match for the condition to pass.
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
 									},
-								},
-								"exclude": {
-									Type:     schema.TypeList,
-									Optional: true,
-									Description: "",
-									Elem: &schema.Schema{
-										Type: schema.TypeString,
-									},
+									"exclude": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: "The repository properties and values to exclude. The condition will not pass if any of these properties match.",
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									}
 								}
 							}
-						}
+						},
 					},
 				},
 			},

@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/google/go-github/v57/github"
+	"github.com/google/go-github/v61/github"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -146,6 +146,27 @@ func expandConditions(input []interface{}, org bool) *github.RulesetConditions {
 			}
 
 			rulesetConditions.RepositoryID = &github.RulesetRepositoryIDsConditionParameters{RepositoryIDs: repositoryIDs}
+		} else if v, ok := inputConditions["repository_property"].([]interface{}); ok && v != nil && len(v) != 0 {
+			inputRefName := v[0].(map[string]interface{})
+			include := make([]string, 0)
+			exclude := make([]string, 0)
+
+			for _, v := range inputRefName["include"].([]interface{}) {
+				if v != nil {
+					include = append(include, v.(string))
+				}
+			}
+
+			for _, v := range inputRefName["exclude"].([]interface{}) {
+				if v != nil {
+					exclude = append(exclude, v.(string))
+				}
+			}
+			//TODO: update rulesetCondition for repository property
+			rulesetConditions.RepositoryProperty = &github.Rule{
+				Include: include,
+				Exclude: exclude,
+			}
 		}
 	}
 
